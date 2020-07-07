@@ -374,6 +374,7 @@ export async function getStaticProps() {
     });
     // return all the posts
     return data;
+    
   })(require.context("../posts", true, /\.md$/));
 
   posts.forEach(blog => {
