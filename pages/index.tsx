@@ -8,6 +8,7 @@ import { animated, config, useChain, useSpring, useTrail } from "react-spring";
 import { Button, Heading, HeroTitle, P, ProjectHeading } from "../components/Atoms";
 import Container from "../components/layout/Container";
 import Stack from "../components/layout/Stack";
+import { useRouteHistory } from "../components/Molecules/RouterHistoryContext";
 import Projects from "../_data/Projects";
 
 type Blog = {
@@ -30,6 +31,11 @@ const values = Array(4).fill("1");
 const curiosityQuote = ["Curiosity is, ", "the engine of achievements "];
 
 const Home = ({ allBlogs }: Props): JSX.Element => {
+  // Browser History
+  const { routes } = useRouteHistory();
+  const isFirstVisitToHome = routes.length === 0;
+
+  // Animation Logic
   const phraseRef = React.useRef();
   const divRef = React.useRef();
   const heroRef = React.useRef();
@@ -58,23 +64,27 @@ const Home = ({ allBlogs }: Props): JSX.Element => {
     ref: heroRef,
   });
 
-  useChain([phraseRef, divRef, heroRef], [0, 2.3, 2.5]);
+  useChain(isFirstVisitToHome ? [phraseRef, divRef, heroRef] : [heroRef], isFirstVisitToHome ? [0, 2.3, 2.5] : [0]);
   return (
     <div>
       <Head>
         <title>Amine Elouarti</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <OpenerPhrase>
-        {phraseTrail.map((props, i) => (
-          <animated.div key={i} style={props}>
-            {curiosityQuote[i]}
-          </animated.div>
-        ))}
-      </OpenerPhrase>
-      {trails.map((props, i) => (
-        <BlackOpener key={i} left={25 * i} style={props} />
-      ))}
+      {isFirstVisitToHome && (
+        <>
+          <OpenerPhrase>
+            {phraseTrail.map((props, i) => (
+              <animated.div key={i} style={props}>
+                {curiosityQuote[i]}
+              </animated.div>
+            ))}
+          </OpenerPhrase>
+          {trails.map((props, i) => (
+            <BlackOpener key={i} left={25 * i} style={props} />
+          ))}
+        </>
+      )}
       <Container forwardedAs="section" height="80vh" display="flex" alignItems="center">
         <animated.div style={springs}>
           <Box row justifyContent="center">
@@ -176,7 +186,7 @@ const Home = ({ allBlogs }: Props): JSX.Element => {
         <Box row mx={-16}>
           {allBlogs.map(({ document: { data: { cover_image, description, title } }, slug }) => (
             <BlogCard col={{ xs: 12 / 12, md: 6 / 12, lg: 4 / 12 }} key={slug} px={16} mt={24}>
-              <Link href={`/blog/${slug}`}>
+              <Link href={`/blog/[slug]`} as={`/blog/${slug}`}>
                 <a>
                   <img src={cover_image} />
                   <Heading mt={12} forwardedAs="h3" fontSize="1.3rem">

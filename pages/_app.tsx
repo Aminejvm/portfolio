@@ -3,6 +3,7 @@ import App from "next/app";
 import Head from "next/head";
 import React from "react";
 import Headroom from "react-headroom";
+import { RouterHistoryContext } from "../components/Molecules";
 import Nav from "../components/nav";
 import Reset from "../globalStyles/reset";
 import theme from "../globalStyles/theme";
@@ -26,7 +27,9 @@ class MyApp extends App {
           </header>
           <Reset />
           <main>
-            <Component {...pageProps} />
+            <RouterHistoryContext>
+              <Component {...pageProps} />
+            </RouterHistoryContext>
           </main>
         </>
       </ThemeProvider>
