@@ -32,7 +32,7 @@ const Blog = ({ allBlogs }: Props): JSX.Element => (
     <Box row mx={-16} mt={24}>
       {allBlogs.map(({ document: { data: { cover_image, description, title } }, slug }) => (
         <BlogCard col={{ xs: 12 / 12, md: 6 / 12, lg: 4 / 12 }} key={slug} px={16} mt={24}>
-          <Link href={`/blog/${slug}`}>
+          <Link href={`/blog/[slug]`} as={`/blog/${slug}`}>
             <a>
               <img src={cover_image} />
               <Heading mt={12} forwardedAs="h3" fontSize="1.3rem">
@@ -64,7 +64,7 @@ const BlogCard = styled(Box)`
   }
 `;
 
-Blog.getInitialProps = async function() {
+export async function getStaticProps() {
   // get all .md files from the src/posts dir
   const posts = (context => {
     // grab all the files matching this context
@@ -93,9 +93,15 @@ Blog.getInitialProps = async function() {
     return data;
   })(require.context("../../posts", true, /\.md$/));
 
+  posts.forEach(blog => {
+    delete blog.document.orig;
+  });
+
   return {
-    allBlogs: posts,
+    props: {
+      allBlogs: posts,
+    },
   };
-};
+}
 
 export default Blog;

@@ -107,15 +107,48 @@ const Wrapper = styled.section`
   }
 `;
 
-BlogTemplate.getInitialProps = async function(context) {
-  // context contains the query param
-  const { slug } = context.query;
-  // grab the file in the posts dir based on the slug
-  const content = await import(`../../posts/${slug}.md`);
-  // also grab the config file so we can pass down siteTitle
-  // gray-matter parses the yaml frontmatter from the md body
+export async function getStaticProps({ params }) {
+  const content = await import(`../../posts/${params.slug}.md`);
   const data = matter(content.default);
+  delete data.orig;
+  return { props: data };
+}
+
+export async function getStaticPaths() {
+  // Call an external API endpoint to get posts.
+  // You can use any data fetching library
+  const posts = (context => {
+    // grab all the files matching this context
+    const keys = context.keys();
+    // grab the values from these files
+    const values: any = keys.map(context);
+    // go through each file
+    const data = keys.map((key, index) => {
+      // Create slug from filename
+      const slug = key
+        .replace(/^.*[\\\/]/, "")
+        .split(".")
+        .slice(0, -1)
+        .join(".");
+      // get the current file value
+      const value = values[index];
+      // Parse frontmatter & markdownbody for the current file
+      const document = matter(value.default);
+      // return the .md content & pretty slug
+      return {
+        document,
+        slug,
+      };
+    });
+    // return all the posts
+    return data;
+  })(require.context("../../posts", true, /\.md$/));
   return {
-    ...data,
+    paths: posts.map(({ slug }) => ({
+      params: {
+        slug,
+      },
+    })),
+    fallback: false,
   };
-};
+}

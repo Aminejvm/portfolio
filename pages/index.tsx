@@ -347,7 +347,7 @@ const Devider = styled.div`
   height: 2px;
   background-color: grey200;
 `;
-Home.getInitialProps = async function() {
+export async function getStaticProps() {
   // get all .md files from the src/posts dir
   const posts = (context => {
     // grab all the files matching this context
@@ -376,8 +376,12 @@ Home.getInitialProps = async function() {
     return data;
   })(require.context("../posts", true, /\.md$/));
 
+  posts.forEach(blog => {
+    delete blog.document.orig;
+  });
+
   return {
-    allBlogs: posts,
+    props: { allBlogs: posts },
   };
-};
+}
 export default Home;

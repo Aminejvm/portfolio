@@ -11,7 +11,7 @@
     "@xstyled/styled-components": "^1.15.1",
     "@xstyled/system": "^1.15.1",
     "gray-matter": "^4.0.2",
-    "next": "^9.1.7",
+    "next": "^9.4.4",
     "polished": "^3.4.2",
     "raw-loader": "^4.0.0",
     "react": "16.12.0",
