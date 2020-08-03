@@ -188,7 +188,7 @@ const Home = ({ allBlogs }: Props): JSX.Element => {
             <BlogCard col={{ xs: 12 / 12, md: 6 / 12, lg: 4 / 12 }} key={slug} px={16} mt={24}>
               <Link href={`/blog/[slug]`} as={`/blog/${slug}`}>
                 <a>
-                  <img src={cover_image} />
+                  <BlogCardImg src={cover_image} alt={title} />
                   <Heading mt={12} forwardedAs="h3" fontSize="1.3rem">
                     {title}
                   </Heading>
@@ -347,6 +347,13 @@ const Devider = styled.div`
   height: 2px;
   background-color: grey200;
 `;
+
+const BlogCardImg = styled.img`
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+`;
+
 export async function getStaticProps() {
   // get all .md files from the src/posts dir
   const posts = (context => {
@@ -374,7 +381,6 @@ export async function getStaticProps() {
     });
     // return all the posts
     return data;
-    
   })(require.context("../posts", true, /\.md$/));
 
   posts.forEach(blog => {
