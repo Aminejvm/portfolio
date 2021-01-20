@@ -93,7 +93,7 @@ const Home = ({ allBlogs }: Props): JSX.Element => {
                 Hi There,
               </P>
               <HeroTitle mt={{ xs: 0, md: -12 }} fontSize={{ xs: "2rem", md: "5.75rem" }}>
-                I&apos; m Amine Elouarti
+                I&apos;m Amine Elouarti
               </HeroTitle>
               <P color="grey500" fontSize={{ xs: "1.125rem", md: "2rem" }} mx={{ xs: 0, xl: 64 }}>
                 <B> Software engineer </B>
